@@ -7,9 +7,9 @@ def main(page: ft.Page):
     page.title = "Space Simulation"
     page.theme_color = "Blue"
 
-    # Установка вертикального и горизонтального выравнивания
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.horizontal_alignment = ft.MainAxisAlignment.CENTER
+    # Установка адаптивного выравнивания
+    page.vertical_alignment = ft.MainAxisAlignment.START
+    page.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
 
     # Создание верхней панели
     header = create_header(page)
@@ -21,16 +21,22 @@ def main(page: ft.Page):
     side_panel = create_side_panel(page)
 
     # Добавляем элементы на страницу
+    # Добавляем элементы на страницу
     page.add(
         ft.Column(
             [
-                header,  # Верхняя панель находится выше
+                header,  # Верхняя панель
                 ft.Row(
                     [
-                        animation_view,  # Центральное окно для анимации
-                        side_panel       # Боковая панель справа
+                        ft.Container(
+                            animation_view,  # Центральная анимация
+                            expand=True,  # Центральный блок занимает всё доступное пространство
+                        ),
+                        side_panel  # Боковая панель справа
                     ],
-                    expand=True,  # Позволяет строке занимать всю доступную ширину
+                    expand=True,  # Растягиваем строку на всю ширину
+                    alignment=ft.MainAxisAlignment.START,  # Расположение сверху
+                    vertical_alignment=ft.CrossAxisAlignment.STRETCH  # Панель растягивается по высоте
                 ),
             ],
             expand=True
@@ -41,7 +47,7 @@ def main(page: ft.Page):
     header.content.controls[0].on_click = lambda e:  start_animation()  # Кнопка "Начать"
 
     # Привязываем функцию закрытия анимации
-    header.content.controls[1].on_click = lambda e: close_animation() # Первая кнопка в шапке для закрытия анимации
+    header.content.controls[1].on_click = lambda e: close_animation()  # Первая кнопка в шапке для закрытия анимации
 
     # Устанавливаем адаптивное поведение для всего
     page.update()
