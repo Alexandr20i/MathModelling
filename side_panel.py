@@ -1,5 +1,8 @@
 import flet as ft
 
+# from main import run_simulation
+
+
 def create_side_panel(page: ft.Page):
     # Функция для создания строки ввода данных для каждой планеты
     def create_planet_input(index):
@@ -102,10 +105,24 @@ def create_side_panel(page: ft.Page):
             )
             page.dialog.open = True
 
+        # else:
+        #     run_simulation(page, num_planets_field.value, scheme_dropdown.value)
+
         page.update()
 
     # Кнопка для подтверждения ввода
+    submit_button = ft.ElevatedButton(
+        text="Ввести",
+        on_click=lambda e: validate_inputs(e)
+    )
+
+    # Кнопка для подтверждения ввода
     submit_button = ft.ElevatedButton(text="Ввести", on_click=validate_inputs)
+    # submit_button = ft.ElevatedButton(
+    #     text="Ввести",
+    #     on_click=lambda e: run_simulation(scheme_dropdown.value, positions, velocities, accelerations,
+    #                                       prev_accelerations, dt)
+    # )
 
     # # Добавляем обработчик для обновления количества строк при изменении числа планет
     num_planets_field.on_change = update_planet_inputs

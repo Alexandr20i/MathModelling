@@ -1,8 +1,26 @@
 import flet as ft
+import numpy as np
 from header_view import create_header
 from side_panel import create_side_panel
 from animations import create_animation_view
-from razn_schemes import beeman, euler, werle, euler_kramer
+from razn_schemes.beeman import beeman_method
+from razn_schemes.euler import euler_method
+from razn_schemes.euler_kramer import euler_cromer_method
+from razn_schemes.werle import verlet_method
+
+# Выбор схемы и запуск симуляции
+# def run_simulation(scheme, positions, velocities, masses, dt):
+#     accelerations = calculate_accelerations(positions, masses)
+#     prev_accelerations = np.copy(accelerations)
+#
+#     if scheme == "Эйлера":
+#         return euler_method(positions, velocities, accelerations, dt)
+#     elif scheme == "Эйлера-Кромера":
+#         return euler_cromer_method(positions, velocities, accelerations, dt)
+#     elif scheme == "Верле":
+#         return verlet_method(positions, velocities, accelerations, dt)
+#     elif scheme == "Бимана":
+#         return beeman_method(positions, velocities, accelerations, prev_accelerations, dt)
 
 def main(page: ft.Page):
     page.title = "Space Simulation"
