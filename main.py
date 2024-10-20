@@ -2,6 +2,7 @@ import flet as ft
 from header_view import create_header
 from side_panel import create_side_panel
 from animations import create_animation_view
+from razn_schemes import beeman, euler, werle, euler_kramer
 
 def main(page: ft.Page):
     page.title = "Space Simulation"
@@ -20,7 +21,6 @@ def main(page: ft.Page):
     # Боковая панель с кнопками
     side_panel = create_side_panel(page)
 
-    # Добавляем элементы на страницу
     # Добавляем элементы на страницу
     page.add(
         ft.Column(
