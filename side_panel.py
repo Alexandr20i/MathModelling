@@ -1,28 +1,3 @@
-# import flet as ft
-#
-# def create_side_panel(page: ft.Page):
-#     # Боковая панель с кнопками
-#     side_panel = ft.Container(
-#         content=ft.Column(
-#             [
-#                 ft.ElevatedButton(text="Button 1"),
-#                 ft.ElevatedButton(text="Button 2"),
-#                 ft.ElevatedButton(text="Button 3"),
-#                 ft.ElevatedButton(text="Button 4"),
-#             ],
-#             alignment=ft.MainAxisAlignment.START,  # Выравнивание по вертикали (вверху)
-#             spacing=10  # Расстояние между кнопками
-#         ),
-#         width=250,  # Ширина боковой панели
-#         padding=10,
-#         bgcolor=ft.colors.LIGHT_BLUE_500,  # Фон для наглядности
-#         alignment=ft.alignment.center_right,  # Выравнивание по правому краю
-#         expand=False,  # Панель не растягивается по горизонтали
-#     )
-#
-#     return side_panel
-
-
 import flet as ft
 
 def create_side_panel(page: ft.Page):
@@ -31,37 +6,17 @@ def create_side_panel(page: ft.Page):
         return ft.Row(
             [
                 ft.Text(value=f"Planet {index + 1}:", width=65),
-                ft.TextField(label="X", width=60),
-                ft.TextField(label="Y", width=60),
-                ft.TextField(label="V_x", width=60),
-                ft.TextField(label="V_y", width=60),
-                ft.TextField(label="Mass", width=60),
+                ft.TextField(label="X", width=50),
+                ft.TextField(label="Y", width=50),
+                ft.TextField(label="V_x", width=55),
+                ft.TextField(label="V_y", width=55),
+                ft.TextField(label="Mass", width=70),
             ],
             spacing=5
         )
 
-    # Функция для обновления количества строк ввода данных для планет
-    # def update_planet_inputs(e):
-    #     num_planets = int(num_planets_field.value)
-    #     planet_inputs_container.controls = [
-    #         create_planet_input(i) for i in range(num_planets)
-    #     ]
-    #     page.update()
-
-
-    # Контейнер для динамического добавления строк ввода данных для планет
-    # planet_inputs_container = ft.Column([], spacing=10)
-
     # Количество планет (по умолчанию 2)
     num_planets_field = ft.TextField(label="Количество планет", value="2", width=200)
-
-
-    # # Кнопка для обновления количества планет
-    # update_button = ft.ElevatedButton(text="Обновить количество планет", on_click=update_planet_inputs)
-
-    # Кнопка для обновления количества строк
-    # update_planets_button = ft.ElevatedButton(text="Обновить", on_click=None)
-
 
     # Разностная схема
     scheme_dropdown = ft.Dropdown(
@@ -99,33 +54,58 @@ def create_side_panel(page: ft.Page):
         except ValueError:
             print("Некорректное количество планет")
 
-    # Функция для обновления количества строк ввода данных для планет
-    # def update_planet_inputs(e):
-    #     try:
-    #         num_planets = int(num_planets_field.value) if num_planets_field.value else 0
-    #         if num_planets > 0:
-    #             planet_inputs_container.controls = [
-    #                 create_planet_input(i) for i in range(num_planets)
-    #             ]
-    #         else:
-    #             page.dialog(ft.AlertDialog("Ошибка", "Введите количество планет!"))
-    #     except ValueError:
-    #         page.dialog(ft.AlertDialog("Ошибка", "Количество планет должно быть числом!"))
-    #     page.update()
 
-        # Функция для обновления количества строк ввода данных для планет
-    # def update_planet_inputs(e):
-    #     num_planets = int(num_planets_field.value)
-    #     planet_inputs_container.controls = [
-    #         create_planet_input(i) for i in range(num_planets)
-    #     ]
-    #     page.update()
+    def validate_inputs(e):
+        valid = True
 
-    # # Привязка кнопки к функции обновления
-    # update_planets_button.on_click = update_planet_inputs
+        if num_planets_field.value is None or num_planets_field.value == "" or num_planets_field.value == "0":
+            num_planets_field.border_color = "red"
+            valid = False
+        else:
+            num_planets_field.border_color = "black"
+
+        # Проверка поля "разностная схема"
+        if scheme_dropdown.value is None or scheme_dropdown.value == "":
+            scheme_dropdown.border_color = "red"
+            valid = False
+        else:
+            scheme_dropdown.border_color = "black"
+
+        # Проверка поля "шаг по времени"
+        if time_step_field.value == "" or time_step_field.value is None:
+            time_step_field.border_color = "red"
+            valid = False
+        else:
+            time_step_field.border_color = "black"
+
+        # Проверка поля "время моделирования"
+        if sim_time_field.value == "" or sim_time_field.value is None:
+            sim_time_field.border_color = "red"
+            valid = False
+        else:
+            sim_time_field.border_color = "black"
+
+        # Проверка каждого поля ввода для планет
+        for control in planet_inputs_container.controls:
+            for field in control.controls[1:]:
+                if field.value == "" or field.value is None:
+                    field.border_color = "red"
+                    valid = False
+                else:
+                    field.border_color = "black"
+
+        # Если есть незаполненные поля, показать ошибку
+        if not valid:
+            page.dialog = ft.AlertDialog(
+                title=ft.Text("Ошибка"),
+                content=ft.Text("Заполните все поля!")
+            )
+            page.dialog.open = True
+
+        page.update()
 
     # Кнопка для подтверждения ввода
-    submit_button = ft.ElevatedButton(text="Ввести", on_click=lambda e: print("Данные введены"))
+    submit_button = ft.ElevatedButton(text="Ввести", on_click=validate_inputs)
 
     # # Добавляем обработчик для обновления количества строк при изменении числа планет
     num_planets_field.on_change = update_planet_inputs
@@ -135,9 +115,6 @@ def create_side_panel(page: ft.Page):
         content=ft.Column(
             [
                 ft.Text(value="Выберите количество планет:"),
-                # ft.Row([num_planets_field], spacing=10), # Поле для количества планет и кнопка "Обновить"
-
-
                 num_planets_field,
                 scheme_dropdown,
                 time_step_field,
@@ -146,7 +123,6 @@ def create_side_panel(page: ft.Page):
                 planet_inputs_container,  # Контейнер для ввода данных планет
                 submit_button
                 # ft.ElevatedButton(text="Ввести", on_click=lambda e: print("Данные введены"))
-
             ],
             alignment=ft.MainAxisAlignment.START,
             spacing=10
@@ -157,5 +133,4 @@ def create_side_panel(page: ft.Page):
         alignment=ft.alignment.center_right,
         expand=False
     )
-
     return side_panel
